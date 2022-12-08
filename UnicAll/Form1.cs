@@ -1,8 +1,3 @@
-using System.Text.RegularExpressions;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Numerics;
 
 namespace UnicAll
@@ -67,7 +62,7 @@ namespace UnicAll
             // Если заполнены "количество слов" и "количество ячеек"
             if(words != 0  & cells != 0)
             {
-                // Вычичисление по формуле, с помощью факториала
+                // Вычисление по формуле, с помощью факториала
                 FormulaCount();
             }
         }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Numerics;
 
 namespace UnicAll
 {
@@ -17,40 +18,7 @@ namespace UnicAll
         {
             InitializeComponent();
             resultBox.TextChanged += resultBox_TextChanged;
-            // Запускаем поток с консолью.
-            Task.Factory.StartNew(ConsoleOpen);
         }
-        private void ConsoleOpen()
-        {
-            // Запускаем консоль.
-            if (AllocConsole())
-            {
-                System.Console.WriteLine("Для выхода наберите exit.");
-                while (true)
-                {
-                    // Считываем данные.
-                    string output = Console.ReadLine();
-                    if (output == "exit")
-                        break;
-                    // Выводим данные в textBox
-                    Action action = () => totalOptions.Text += output + Environment.NewLine;
-                    if (InvokeRequired)
-                        Invoke(action);
-                    else
-                        action();
-                }
-                // Закрываем консоль.
-                //FreeConsole();
-            }
-        }
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool AllocConsole();
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool FreeConsole();
 
         private void countOfWords_TextChanged(object sender, EventArgs e)
         {
@@ -106,21 +74,47 @@ namespace UnicAll
 
         private void FormulaCount()
         {
-            int N = (int)words;
-            int K = (int)cells;
+            try
+            {
+                int N = (int)words;
+                int K = (int)cells;
 
-            // 1) Количество уникальных значений
-            var nFac = Enumerable.Range(1, N).Aggregate(1, (p, item) => p * item);
-            var nkFac = Enumerable.Range(1, N - K).Aggregate(1, (p, item) => p * item);
-            var result = nFac / nkFac;
-            Console.WriteLine("Уникальных размещений: " + result);
-            resultBox.Text += result.ToString();
+                // 1) Количество уникальных значений
 
-            // 2) Всего значений
-            int total = Enumerable.Range(1, N).Aggregate(1, (p, item) => p * item);
+                //var nFac = Enumerable.Range(1, N).Aggregate(1, (p, item) => p * item);
 
-            Console.WriteLine("Всего размещений: " + total);
-            totalOptions.Text += total.ToString();
+                BigInteger nFac = Enumerable.Range(1, N).Aggregate(1, (p, item) => p * item);
+                BigInteger nkFac = Enumerable.Range(1, N - K).Aggregate(1, (p, item) => p * item);
+
+                //ulong nFac = 1UL;
+                //for (ulong i = 1; i <= N; i++) nFac *= i;
+
+                //ulong nkFac = 1UL;
+                //for (ulong i = 1; i <= N - K; i++) nkFac *= i;
+
+                var result = nFac / nkFac;
+
+                //var nkFac = Enumerable.Range(1, N - K).Aggregate(1, (p, item) => p * item);
+
+                //var result = nFac / nkFac;
+                //Console.WriteLine("Уникальных размещений: " + result);
+                resultBox.Text += result.ToString();
+
+                // 2) Всего значений
+
+                //int total = Enumerable.Range(1, N).Aggregate(1, (p, item) => p * item);
+
+                //ulong total = (ulong)Math.Pow(N, K);
+
+                BigInteger total = BigInteger.Pow(N, K);
+
+                //Console.WriteLine("Всего размещений: " + total);
+                totalOptions.Text += total.ToString();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

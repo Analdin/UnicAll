@@ -96,51 +96,11 @@ namespace UnicAll
             totalOptions.Text = "";
             resultBox.Text = "";
 
-            string mainFolder = Directory.GetCurrentDirectory() + @"\Files";
-            string pattern = @"\b(ArtId=[0-9]*)\b";
-
             // Если заполнены "количество слов" и "количество ячеек"
             if(words != 0  & cells != 0)
             {
-                // 0 - счетчик откуда начинаем считать
-                CountOfVariants(0);
-
                 // Вычичисление по формуле, с помощью факториала
                 FormulaCount();
-
-            }
-            else
-            {
-                int count = File.ReadAllLines(Directory.GetCurrentDirectory() + @"\Files\Words.txt").Length;
-
-                using (StreamWriter sw = File.CreateText(Directory.GetCurrentDirectory() + @"\Files\target.txt"))
-                {
-                    List<string> linesToWrite = new List<string>();
-                    List<string> linesToWrite2 = new List<string>();
-
-                    foreach (var file in Directory.EnumerateFiles(mainFolder, "*.txt", SearchOption.AllDirectories))
-                    {
-                        using (StreamReader sr = new StreamReader(Directory.GetCurrentDirectory() + @"\Files\Words.txt", System.Text.Encoding.Default))
-                        {
-                            string line;
-                            for (int i = 0; i < count; i++)
-                            {
-                                string newString = sr.ReadLine();
-                                linesToWrite.Add(newString);
-                            }
-                        }
-                    }
-
-                    linesToWrite2 = linesToWrite.Distinct().ToList();
-
-                    unicResults = linesToWrite2.Count;
-
-                    // Выводим количество вариантов - уникальных и всего
-                    resultBox.Text += unicResults;
-                    totalOptions.Text += count.ToString();
-
-                    MessageBox.Show("Работа выполнена");
-                }
             }
         }
 
@@ -157,70 +117,10 @@ namespace UnicAll
             resultBox.Text += result.ToString();
 
             // 2) Всего значений
-
-            // Разница
-            //ulong diff = words - cells;
-            // Вычисляем факториал первого числа - 300
-            //ulong firstNum = Factorial(words);
-            // Вычисляем факториал второго числа - 292 (diff)
-            //ulong secondNum = Factorial(cells);
-            // Количество вариантов - всего
-            //ulong total = firstNum / secondNum;
-
             int total = Enumerable.Range(1, N).Aggregate(1, (p, item) => p * item);
 
             Console.WriteLine("Всего размещений: " + total);
             totalOptions.Text += total.ToString();
-        }
-
-        //ulong Factorial(ulong n)
-        //{
-        //    if (n == 1) return 1;
-
-        //    return n * Factorial(n - 1);
-        //}
-
-        int N = 0;
-        int[,] a = new int[5, 7]; // Размерность массива, по ТЗ 300 и 8
-
-        private void CountOfVariants(int n)
-        {
-            int x = n % 7;
-            int y = n / 7;
-            for (int k, j, i = 1; i <= 7 && N < 10; i++)
-            {
-                for (j = 0; j < x; j++)
-                    if (a[y, j] == i) break;
-                if (j < x) continue;
-
-                for (j = 0; j < y; j++)
-                    if (a[j, x] == i) break;
-                if (j < y) continue;
-                if (y > 0 && x > 0)
-                {
-                    int b = a[y, x - 1];
-                    for (j = 0; j < y; j++)
-                    {
-                        for (k = 0; k < 6; k++)
-                            if (a[j, k] == b && a[j, k + 1] == i) break;
-                        if (k < 6) break;
-                    }
-                    if (j < y) continue;
-                }
-                a[y, x] = i;
-                if (n < 34) CountOfVariants(n + 1);
-                else
-                {
-                    for (j = 0; j < 5; j++)
-                    {
-                        for (k = 0; k < 7; k++)
-                            Console.Write(" " + a[j, k]);
-                        Console.WriteLine();
-                    }
-                    Console.WriteLine();
-                    N++;
-                }
-            }
         }
     }
 }

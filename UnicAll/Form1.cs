@@ -65,6 +65,10 @@ namespace UnicAll
                 // Вычисление по формуле, с помощью факториала
                 FormulaCount();
             }
+            else
+            {
+                MessageBox.Show("Необходимо заполнить ячейки 'слова' и 'ячейки' перед началом расчета");
+            }
         }
 
         private void FormulaCount()

@@ -76,30 +76,14 @@ namespace UnicAll
 
                 // 1) Количество уникальных значений
 
-                //var nFac = Enumerable.Range(1, N).Aggregate(1, (p, item) => p * item);
-
-                BigInteger nFac = Enumerable.Range(1, N).Aggregate(1, (p, item) => p * item);
-                BigInteger nkFac = Enumerable.Range(1, N - K).Aggregate(1, (p, item) => p * item);
-
-                //ulong nFac = 1UL;
-                //for (ulong i = 1; i <= N; i++) nFac *= i;
-
-                //ulong nkFac = 1UL;
-                //for (ulong i = 1; i <= N - K; i++) nkFac *= i;
+                BigInteger nFac = Enumerable.Range(1, N).Select(n => new BigInteger(n)).Aggregate(BigInteger.One, (p, item) => p * item);
+                BigInteger nkFac = Enumerable.Range(1, N - K).Select(n => new BigInteger(n)).Aggregate(BigInteger.One, (p, item) => p * item);
 
                 var result = nFac / nkFac;
 
-                //var nkFac = Enumerable.Range(1, N - K).Aggregate(1, (p, item) => p * item);
-
-                //var result = nFac / nkFac;
-                //Console.WriteLine("Уникальных размещений: " + result);
                 resultBox.Text += result.ToString();
 
                 // 2) Всего значений
-
-                //int total = Enumerable.Range(1, N).Aggregate(1, (p, item) => p * item);
-
-                //ulong total = (ulong)Math.Pow(N, K);
 
                 BigInteger total = BigInteger.Pow(N, K);
 
